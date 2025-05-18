@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calmistry Aroma Candle - Light Your Calm</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: linear-gradient(to bottom, #f5e6cc, #d9c2a6);
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+        }
+        .container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        .candle {
+            position: relative;
+            width: 100px;
+            height: 200px;
+            background: linear-gradient(to bottom, #ffffff, #e0e0e0);
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+            z-index: 2;
+            animation: fadeIn 1s ease-out;
+        }
+        .flame {
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 30px;
+            background: radial-gradient(circle, #ffcc00 20%, #ff6600 80%);
+            border-radius: 50% 50% 20% 20%;
+            animation: flicker 0.2s infinite alternate;
+        }
+        .smoke {
+            position: absolute;
+            top: -50px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 10px;
+            height: 20px;
+            background: rgba(200, 200, 200, 0.5);
+            border-radius: 50%;
+            animation: smokeRise 2s infinite ease-out;
+        }
+        .slogan {
+            font-family: Georgia, serif;
+            font-size: 2.5rem;
+            color: #ffffff;
+            text-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            margin-top: 20px;
+            animation: fadeIn 1s ease-out 1s forwards;
+            opacity: 0;
+            z-index: 3;
+        }
+        .company-name {
+            font-family: Georgia, serif;
+            font-size: 1.8rem;
+            color: #ffd700; /* Warna emas untuk kontras */
+            text-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            margin-top: 15px;
+            opacity: 0;
+            z-index: 3;
+            animation: fadeInSlide 1s ease-out 2s forwards;
+        }
+        .shop-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            margin-top: 20px;
+            background: #8b6f47;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 1.2rem;
+            animation: fadeIn 1s ease-out 3s forwards;
+            opacity: 0;
+            transition: transform 0.3s;
+            z-index: 3;
+        }
+        .shop-btn:hover {
+            transform: scale(1.1);
+        }
+        #particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1; /* Pastikan di belakang teks */
+        }
+        @keyframes flicker {
+            0% { transform: translateX(-50%) scale(1); }
+            100% { transform: translateX(-50%) scale(1.1); }
+        }
+        @keyframes smokeRise {
+            0% { transform: translateX(-50%) translateY(0); opacity: 0.5; }
+            100% { transform: translateX(-50%) translateY(-100px); opacity: 0; }
+        }
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeInSlide {
+            0% { opacity: 0; transform: translateY(30px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        @media (max-width: 768px) {
+            .candle { width: 80px; height: 160px; }
+            .slogan { font-size: 1.8rem; }
+            .company-name { font-size: 1.3rem; margin-top: 10px; }
+            .shop-btn { font-size: 1rem; padding: 8px 16px; }
+        }
+    </style>
+</head>
+<body>
+    <main class="container">
+        <div class="candle">
+            <div class="flame"></div>
+            <div class="smoke"></div>
+        </div>
+        <h1 class="slogan">Light Your Calm</h1>
+        <div class="company-name">Calmistry Company</div>
+        <a href="https://calmistry.com/shop" class="shop-btn" target="_blank">Shop Now</a>
+        <canvas id="particles"></canvas>
+    </main>
+    <script>
+        const canvas = document.getElementById("particles");
+        const ctx = canvas.getContext("2d");
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const particles = [];
+        class Particle {
+            constructor() {
+                this.x = canvas.width / 2;
+                this.y = canvas.height / 2 - 50;
+                this.vx = (Math.random() - 0.5) * 2;
+                this.vy = (Math.random() - 0.5) * 2;
+                this.size = Math.random() * 3 + 1;
+                this.alpha = 1;
+            }
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                this.alpha -= 0.01;
+                this.size *= 0.99;
+            }
+            draw() {
+                ctx.fillStyle = `rgba(255, 204, 0, ${this.alpha})`;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function createParticles() {
+            if (particles.length < 50) {
+                particles.push(new Particle());
+            }
+        }
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach((particle, index) => {
+                particle.update();
+                particle.draw();
+                if (particle.alpha <= 0 || particle.size <= 0.1) {
+                    particles.splice(index, 1);
+                }
+            });
+            createParticles();
+            requestAnimationFrame(animateParticles);
+        }
+
+        animateParticles();
+
+        window.addEventListener("resize", () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
+        const candle = document.querySelector(".candle");
+        candle.addEventListener("mouseenter", () => {
+            document.querySelector(".flame").style.transform = "translateX(-50%) scale(1.3)";
+        });
+        candle.addEventListener("mouseleave", () => {
+            document.querySelector(".flame").style.transform = "translateX(-50%) scale(1)";
+        });
+    </script>
+</body>
+</html>
